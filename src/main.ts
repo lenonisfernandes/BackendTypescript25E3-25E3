@@ -1,26 +1,31 @@
-//CRUD      - READ
-import { usuarios, UsuarioType } from './usuario';
+import UsuarioRepositorio from "./Infra/UsuarioRepositorio"
+import { Usuario } from "./usuario";
+import express, { Request, Response } from 'express';
 
-const usuariosBD = retornaUsuarios();
+const usuarioRespositorio = new UsuarioRepositorio;
 
-console.log(usuariosBD);
+const usuario = new Usuario("Rodney", true, 18n);
 
-const inteiro = '1';
-const float = 1.4;
+const app = express();
+const port = 3000;
 
-console.log(Number(inteiro) + float);
+app.get('/', (req: Request, res: Response) => {
+    res.send("Hello World!");
+});
 
-//hoisting
-function retornaUsuarios () {
-    return usuarios;
-}
+app.listen(port, () => {
+    console.info(`Servidor rodando na porta http://localhost:${port}.`);
+});
 
-function retornarUsuarioPorId(id: number): UsuarioType | undefined {
-    return usuarios.find(user => user.id === id);
-}
+/*console.log("GetAll");
+console.log(usuarioRespositorio.getUsuarios());
 
-console.log(retornarUsuarioPorId(123));
+console.log("----");
+console.log("GetById-123");
+console.log(usuarioRespositorio.getUsuarioPorId(123));
 
-function mostrarEmTela() : void {
-    console.log("exibindo em tela");
-}
+console.log("----");
+console.log("Create");
+console.log(usuarioRespositorio.criarUsuario(usuario));*/
+
+
