@@ -1,1 +1,1 @@
-{"users":[{"id":123,"nome":"Lenon","ativo":false},{"id":124,"nome":"Isabela","ativo":true},{"ativo":true,"saldo":"18","id":16,"nome":"Rodney"},{"ativo":true,"saldo":"18","id":36,"nome":"Rodney"}]}
+{"users":[{"id":123,"nome":"Lenon","ativo":false,"senha":"minha senha"},{"id":124,"nome":"Isabela","ativo":true,"senha":"minha senha"},{"id":125,"nome":"Rodney","ativo":true}]}

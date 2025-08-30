@@ -1,24 +1,4 @@
-export const usuarios: UsuarioSchema[] = [
-    {
-        id: 123,
-        nome: 'Lenon',
-        ativo: false,
-        saldo: 215181316811n,
-    },
-    {
-        id: 124,
-        nome: 'Isabela',
-        ativo: true
-    },
-]
-
-export type UsuarioSchema = {
-    id: number,
-    nome: string,
-    ativo: boolean,
-    saldo?: bigint,
-    contato?: {[key: string]: unknown},
-}
+import { UsuarioSchema } from "./Infra/UsuarioSchema";
 
 type contato = {
     telefone: string,
@@ -29,19 +9,30 @@ export class Usuario {
     nome: string;
     ativo: boolean = true;
     saldo?: bigint = 12n;
+    numeroDoc?: number;
+    senha?: string;
 
     constructor(nome: string, ativo: boolean, saldo?: bigint) {
         this.id = Math.floor(Math.random() * 100);
         this.nome = nome;
         this.ativo = ativo;
         this.saldo = saldo;
+        this.senha = "minha senha";
     }
+}
 
-    getNome() {
-        return this.nome;
-    }
+// DTO - Data Transfer Object
 
-    toString() {
-        return `ID: ${this.id} - Nome: ${this.nome} - Ativo: ${this.ativo} - Saldo: ${this.saldo}`;
-    }
+export type CriarUsuarioDTO = {
+    nome: string;
+    ativo: boolean;
+    saldo?: bigint;
+    numeroDoc?: number;
+    senha?: string;
+}
+
+export type ViewUsuarioDTO = {
+    nome: string;
+    ativo: boolean;
+    numeroDoc?: number;
 }
