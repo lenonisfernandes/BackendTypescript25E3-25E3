@@ -4,4 +4,5 @@ export type UsuarioSchema = {
     ativo: boolean,
     saldo?: bigint,
     contato?: {[key: string]: unknown},
+    numeroDoc?: number
 }

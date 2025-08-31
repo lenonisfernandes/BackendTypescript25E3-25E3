@@ -1,7 +1,8 @@
 import path from "path";
 import fs from "fs";
 import { DBSchema } from "./DBSchema";
-import { usuarios, Usuario, UsuarioSchema } from "../usuario";
+import { Usuario,  } from "../usuario";
+import { UsuarioSchema } from './UsuarioSchema';
 
 export default class UsuarioRepositorio {
     private caminhoArquivo: string;
@@ -57,5 +58,34 @@ export default class UsuarioRepositorio {
         this.reescreverBD(DBAtualizado);
         return usuarios;
     }
+
+    public deletarUsuario(id: number): boolean {
+        const usuarios = this.getUsuarios();
+        const usuarioIndex = usuarios.findIndex(user => user.id === id);
+        if (usuarioIndex !== -1) {
+            usuarios.splice(usuarioIndex, 1);
+            const DBAtualizado = this.accessBD();
+            DBAtualizado.users = usuarios;
+            return this.reescreverBD(DBAtualizado);
+        }
+        return false;
+    }
+
+    public atualizarUsuario(id: number, dadosAtualizados: Partial<Usuario>): UsuarioSchema | undefined {
+        const usuarios = this.getUsuarios();
+        const usuarioIndex = usuarios.findIndex(user => user.id === id);
+
+        if (usuarioIndex !== -1) {
+            usuarios[usuarioIndex] = { ...usuarios[usuarioIndex], ...dadosAtualizados, id };
+            
+            const DBAtualizado = this.accessBD();
+            DBAtualizado.users = usuarios;
+            
+            const sucesso = this.reescreverBD(DBAtualizado);
+            return sucesso ? usuarios[usuarioIndex] : undefined;
+        }
+        return undefined;
+    }
+
 }
 
