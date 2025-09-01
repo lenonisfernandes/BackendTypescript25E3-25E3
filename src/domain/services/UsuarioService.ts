@@ -1,34 +1,26 @@
-//CRUD      - READ
-import UsuarioRepositorio from '../../Infra/UsuarioRepositorio';
-import { UsuarioSchema, usuarios, Usuario } from '../../usuario';
+import NotFoundException from "../../Api/exceptions/NotFoundException";
+import UsuarioRepositorio from "../../Infra/UsuarioRepositorio";
+import { ViewUsuarioDTO } from "../../usuario";
 
-const usuarioRepositorio = new UsuarioRepositorio();
+export default class UsuarioService {
+    private readonly usuarioRepositorio: UsuarioRepositorio;
 
-//hoisting
-function retornaUsuarios () {
-    return usuarioRepositorio.getUsuarios();
-}
-
-function alterarUsuario(id: number, dadosAtualizacao: UsuarioSchema): UsuarioSchema | undefined {
-    const indiceUsuario = usuarios.findIndex(user => user.id === id);
-
-    if(indiceUsuario === -1) {
-        console.log(`Usuário com ID ${id} não encontrado`);
-        return;
+    constructor(usuarioRepository: UsuarioRepositorio) {
+        this.usuarioRepositorio = usuarioRepository;
     }
 
-    usuarios[indiceUsuario] = {...usuarios[indiceUsuario], ...dadosAtualizacao};
-    return usuarios[indiceUsuario];
-}
+    buscarUsuarioPorId(id: number): ViewUsuarioDTO | undefined {
+        const usuario = this.usuarioRepositorio.getUsuarioPorId(+id);
 
-function deleteUsuario(id: number): UsuarioSchema | undefined {
-   
-    const indiceUsuario = usuarios.findIndex(user => user.id === id);
-    if(indiceUsuario === -1) {
-        console.log('Usuário não encontrado');
-        return;
+        if(usuario) {
+            const usuarioDTO: ViewUsuarioDTO = {
+                id: usuario.id,
+                nome: usuario.nome,
+                ativo: usuario.ativo,
+            };
+            return usuarioDTO;
+        }
+        throw new NotFoundException('Usuário não encontrado.');
     }
 
-    const usuarioRemovido = usuarios.splice(indiceUsuario, 1)[0];
-    return usuarioRemovido;
 }

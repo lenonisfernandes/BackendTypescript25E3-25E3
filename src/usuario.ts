@@ -48,6 +48,6 @@ export class Diretor extends Usuario {
 
 export type CriarUsuarioDTO = Omit<Usuario, 'id'>;
 
-export type ViewUsuarioDTO = Pick<CriarUsuarioDTO, 'nome' | 'ativo' | 'numeroDoc'>;
+export type ViewUsuarioDTO = Omit<Usuario, 'senha'>;
 
 export type AtualizarUsuarioDTO = Partial<CriarUsuarioDTO>;

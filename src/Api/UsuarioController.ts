@@ -5,13 +5,16 @@ import { CriarUsuarioDTO } from '../usuario';
 import { UsuarioSchema } from '../Infra/UsuarioSchema';
 import { body, validationResult, param } from 'express-validator';
 import NotFoundException from './exceptions/NotFoundException';
+import UsuarioService from '../domain/services/UsuarioService';
 
 class UsuarioController {
     private readonly usuarioRepositorio: UsuarioRepositorio;
+    private readonly usuarioService: UsuarioService;
     public router: Router = Router();
 
-    constructor(usuarioRepositorio: UsuarioRepositorio) {
+    constructor(usuarioRepositorio: UsuarioRepositorio, usuarioService: UsuarioService) {
         this.usuarioRepositorio = usuarioRepositorio;
+        this.usuarioService = usuarioService;
         this.routes();
     }
 
@@ -46,27 +49,17 @@ class UsuarioController {
     public buscarUsuarioPorId(req: Request, res: Response) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            res.status(400).json({ errors: errors.array() });
+            return;
         }
-
+        
         const id = req.params.id;
-        if(id) {
-            const usuario = this.usuarioRepositorio.getUsuarioPorId(+id);
+        const usuarioDto = this.usuarioService.buscarUsuarioPorId(+id);
 
-            if(usuario) {
-                const usuarioDTO: ViewUsuarioDTO = {
-                    nome: usuario.nome,
-                    ativo: usuario.ativo,
-                    numeroDoc: usuario.numeroDoc
-                };
-                res.json(usuarioDTO);
-            } else {
-                throw new NotFoundException('Usuário não encontrado.');
-            }
-            
-        } else {
-            throw new NotFoundException('ID inválido.');
-        }
+        res.status(200).json(usuarioDto);
+
+        
+        
     }
 
     public criarUsuario(req: Request, res: Response) {
