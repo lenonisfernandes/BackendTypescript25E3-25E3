@@ -4,6 +4,7 @@ import { AtualizarUsuarioDTO, Professor, Usuario, ViewUsuarioDTO } from '../usua
 import { CriarUsuarioDTO } from '../usuario';
 import { UsuarioSchema } from '../Infra/UsuarioSchema';
 import { body, validationResult, param } from 'express-validator';
+import NotFoundException from './exceptions/NotFoundException';
 
 class UsuarioController {
     private readonly usuarioRepositorio: UsuarioRepositorio;
@@ -28,7 +29,7 @@ class UsuarioController {
                 .isBoolean().withMessage('Ativo deve ser um booleano.'),
         ], this.criarUsuario.bind(this));
         this.router.delete('/:id', this.deletarUsuario.bind(this));
-        this.router.patch('/:id', this.AtualizarUsuarioPorId.bind(this));
+        this.router.patch('/:id', this.atualizarUsuarioPorId.bind(this));
     }
 
     public buscarUsuarios(req: Request, res: Response) {
@@ -60,12 +61,12 @@ class UsuarioController {
                 };
                 res.json(usuarioDTO);
             } else {
-                res.status(400).json({ error: "Usuário não encontrado." });
+                throw new NotFoundException('Usuário não encontrado.');
             }
             
         } else {
-            res.status(400).json({ error: "ID inválido." });
-        }  
+            throw new NotFoundException('ID inválido.');
+        }
     }
 
     public criarUsuario(req: Request, res: Response) {
@@ -103,31 +104,26 @@ class UsuarioController {
         }
     }
 
-    public AtualizarUsuarioPorId(req: Request, res: Response) {
-    const id = req.params.id;
-    const dadosUsuario: AtualizarUsuarioDTO = req.body;
+    public atualizarUsuarioPorId(req: Request, res: Response) {
+        const id = req.params.id;
+        const dadosUsuario: AtualizarUsuarioDTO = req.body;
 
-    if (id) {
-        const usuario = this.usuarioRepositorio.atualizarUsuario(+id, dadosUsuario);
-        if (usuario) {
-            const usuarioDto: ViewUsuarioDTO & {id: number} = {
-                id: usuario.id,
-                nome: usuario.nome,
-                ativo: usuario.ativo,
-                numeroDoc: usuario.numeroDoc,
-            };
-            res.json(usuarioDto);
-            return;
-        }
-    } else {
-        res.json("ID não enviado.");
-        return;
+        if (id) {
+            const usuario = this.usuarioRepositorio.atualizarUsuario(+id, dadosUsuario);
+            if (usuario) {
+                const usuarioDto: ViewUsuarioDTO & {id: number} = {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    ativo: usuario.ativo,
+                    numeroDoc: usuario.numeroDoc,
+                };
+                res.json(usuarioDto);
+                return;
+                }
+            } 
+        throw new NotFoundException('Usuário não encontrado.');
     }
 }
-}
-
-
-
 
 export default UsuarioController;
 
