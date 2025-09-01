@@ -19,7 +19,6 @@ export class Usuario {
         this.senha = "minha senha";
         this.sobrenome = sobrenome;
     }
-
 }
 
 // DRY - Dont repeat yourself

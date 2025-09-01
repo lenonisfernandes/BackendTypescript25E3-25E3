@@ -1,8 +1,8 @@
-import routes from "./Api/Routes";
+import routes from "./Api/routes";
 import UsuarioRepositorio from "./Infra/UsuarioRepositorio"
 import { Usuario } from "./usuario";
 import express, { Request, Response } from 'express';
-import logger from "./Infra/Logger";
+import Logger from "./Infra/Logger";
 
 const usuarioRespositorio = new UsuarioRepositorio;
 
@@ -10,7 +10,7 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
-app.use(logger);
+app.use(Logger.init());
 app.use('/api', routes);
 app.get('/', (req: Request, res: Response) => {
     res.json("Hello World!");
